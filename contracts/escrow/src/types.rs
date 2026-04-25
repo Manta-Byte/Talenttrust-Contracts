@@ -1,4 +1,4 @@
-use soroban_sdk::{contracterror, contracttype, Bytes, String};
+use soroban_sdk::{contracterror, contracttype, String};
 
 #[contracttype]
 pub enum DataKey {

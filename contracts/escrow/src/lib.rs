@@ -1,8 +1,8 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contracterror, contractimpl, contracttype, symbol_short, token, Address, Bytes,
-    BytesN, Env, Symbol, Vec,
+    contract, contracterror, contractimpl, contracttype, token, Address, Bytes, BytesN, Env, Symbol,
+    Vec,
 };
 
 mod ttl;
@@ -32,7 +32,7 @@ pub const MAX_MILESTONES: u32 = 10;
 
 /// Hard cap on the total escrow value per contract, in stroops (7 decimal places).
 /// Equals 1 000 000 tokens.
-pub const MAX_TOTAL_ESCROW_STROOPS: i128 = 1_000_000_0000000; // 1 M tokens × 10^7 = 10^13
+pub const MAX_TOTAL_ESCROW_STROOPS: i128 = 10_000_000_000_000; // 1 M tokens × 10^7 = 10^13
 
 pub const MAINNET_PROTOCOL_VERSION: u32 = 1u32;
 pub const MAINNET_MAX_TOTAL_ESCROW_PER_CONTRACT_STROOPS: i128 = 1_000_000_000_000_000i128;
@@ -116,6 +116,7 @@ enum DataKey {
     ReadinessChecklist,
 }
 
+#[allow(dead_code)]
 fn update_readiness_checklist<F>(env: &Env, f: F)
 where
     F: FnOnce(&mut ReadinessChecklist),
@@ -219,8 +220,8 @@ impl Escrow {
         freelancer: Address,
         arbiter: Option<Address>,
         milestones: Vec<i128>,
-        terms_hash: Option<Bytes>,
-        grace_period_seconds: Option<u64>,
+        _terms_hash: Option<Bytes>,
+        _grace_period_seconds: Option<u64>,
     ) -> u32 {
         client.require_auth();
 
@@ -242,13 +243,13 @@ impl Escrow {
             env.panic_with_error(EscrowError::TooManyMilestones);
         }
 
-        let mut total_amount: i128 = 0;
+        let mut _total_amount: i128 = 0;
         let mut milestone_list: Vec<Milestone> = Vec::new(&env);
         for amount in milestones.iter() {
             if amount <= 0 {
                 env.panic_with_error(EscrowError::InvalidMilestoneAmount);
             }
-            total_amount += amount;
+            _total_amount += amount;
             milestone_list.push_back(Milestone {
                 amount,
                 released: false,

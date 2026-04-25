@@ -1,10 +1,10 @@
 #![cfg(test)]
 
-use crate::{DataKey, Escrow, EscrowClient};
-use soroban_sdk::{testutils::Address as _, vec, Address, Env, String};
+use crate::{Escrow, EscrowClient};
+use soroban_sdk::{testutils::Address as _, vec, Address, Env};
 
 fn create_token_contract(e: &Env, admin: &Address) -> Address {
-    e.register_stellar_asset_contract(admin.clone())
+    e.register_stellar_asset_contract_v2(admin.clone()).address()
 }
 
 #[test]
@@ -13,7 +13,7 @@ fn test_fee_accrual_and_withdrawal() {
     env.mock_all_auths();
 
     let admin = Address::generate(&env);
-    let contract_id = env.register_contract(None, Escrow);
+    let contract_id = env.register(Escrow, ());
     let client = EscrowClient::new(&env, &contract_id);
 
     let token_admin = Address::generate(&env);
@@ -79,7 +79,7 @@ fn test_unauthorized_withdrawal() {
     env.mock_all_auths();
 
     let admin = Address::generate(&env);
-    let contract_id = env.register_contract(None, Escrow);
+    let contract_id = env.register(Escrow, ());
     let client = EscrowClient::new(&env, &contract_id);
 
     client.initialize(&admin, &1000u32);
@@ -99,7 +99,7 @@ fn test_over_withdrawal() {
     env.mock_all_auths();
 
     let admin = Address::generate(&env);
-    let contract_id = env.register_contract(None, Escrow);
+    let contract_id = env.register(Escrow, ());
     let client = EscrowClient::new(&env, &contract_id);
 
     client.initialize(&admin, &1000u32);
