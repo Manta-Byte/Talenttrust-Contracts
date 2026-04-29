@@ -338,7 +338,8 @@ impl Escrow {
         contract.status = ContractStatus::Cancelled;
         env.storage().persistent().set(&contract_key, &contract);
 
-        // 7. Emit indexer-friendly event
+        // REDACTION POLICY: emit caller address (public), status enum, and timestamp.
+        // No milestone details, deposited amounts, or terms are included.
         env.events().publish(
             (Symbol::new(&env, "contract_cancelled"), contract_id),
             (caller, contract.status, env.ledger().timestamp()),
